@@ -27,7 +27,7 @@ with codecs.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 
 setup(name='redis_schematics',
-      version='0.1.0',
+      version='0.1.1.dev0',
       description='Redis storage backend for schematics.',
       long_description=README,
       license='Apache License (2.0)',
