@@ -1,0 +1,10 @@
+flake8
+mock
+pytest
+pytest-cache
+pytest-cover
+pytest-sugar
+pytest-xdist
+zest.releaser
+tox
+grpcio_tools
