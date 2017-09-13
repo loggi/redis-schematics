@@ -71,7 +71,8 @@ There are two basic ways to get an element from Redis: by pk or by value.
 You can use the classmethods ``match_for_pk(pk)`` or ``match_for_values(**Kwargs)``
 or just simply ``match(**kwargs)`` to let us choose which one. Notice that the
 performance from both methods is a lot different, so you may avoid matching
-for values on high performance environments.
+for values on high performance environments. You may also use refresh to reload
+an object from storage if it has been modified.
 
 .. code-block:: python
 
@@ -80,6 +81,8 @@ for values on high performance environments.
 
     IceCreamModel.match(id='vanilla')  # match on pk
     IceCreamModel.match(best_before__gte=datetime.now())  # match on values
+
+    vanilla.refresh()
 
 
 **Fetching all and filtering**
@@ -91,6 +94,19 @@ this invlolves deserializing all stored objects.
 
     IceCreamModel.all()
     IceCreamModel.filter(amount__gte=30)
+
+
+**Deleting and expiring**
+
+To remove objects, you can set ``__expire__`` or use the ``delete()`` method.
+
+.. code-block:: python
+
+    class MyVolatileModel(models.Model, SimpleRedisMixin):
+        __expire__ = 3600  # model expire (in seconds)
+        pk = types.StringType()
+
+    vanilla.delete()
 
 
 Roadmap
