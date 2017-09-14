@@ -33,7 +33,7 @@ setup(name='redis_schematics',
       license='Apache License (2.0)',
       author='Gabriela Surita',
       author_email='gsurita@loggi.com',
-      url='https://github.com/loggi/proto-schematics',
+      url='https://github.com/loggi/redis-schematics',
       classifiers=[
           'Intended Audience :: Developers',
           'Operating System :: OS Independent',
