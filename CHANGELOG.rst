@@ -1,8 +1,10 @@
 
-0.2.1 (unreleased)
+0.2.1 (2017-09-14)
 ------------------
 
-- Nothing changed yet.
+**Bug Fixes**
+
+- Update setup url.
 
 
 0.2.0 (2017-09-14)
