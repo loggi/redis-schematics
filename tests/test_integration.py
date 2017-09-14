@@ -21,7 +21,7 @@ class TestSimpleModelStorage(TestCase):
         __redis_client__ = client
         __expire__ = 120
 
-        id = types.StringType(required=True)
+        id = types.IntType(required=True)
         name = types.StringType()
         created = types.DateTimeType()
         good_number = types.IntType()
@@ -29,7 +29,7 @@ class TestSimpleModelStorage(TestCase):
     def setUp(self):
         self.TestModel = self.TestSimpleModel
         self.schema = self.TestModel({
-            'id': 'Foo',
+            'id': 123,
             'name': 'Bar',
             'created': datetime.now(),
             'good_number': 42,
@@ -38,7 +38,7 @@ class TestSimpleModelStorage(TestCase):
 
     @property
     def raw_value(self):
-        return client.get('TestSimpleModel:Foo')
+        return client.get('TestSimpleModel:123')
 
     @property
     def stored(self):
@@ -48,10 +48,10 @@ class TestSimpleModelStorage(TestCase):
         assert self.stored == self.schema.to_primitive()
 
     def test_match(self):
-        result = self.TestModel.match(id='Foo')
+        result = self.TestModel.match(id=123)
         assert self.stored == result.to_primitive()
 
-        result = self.TestModel.match(pk='Foo')
+        result = self.TestModel.match(pk='123')
         assert self.stored == result.to_primitive()
 
         result = self.TestModel.match(good_number=42)
@@ -64,13 +64,13 @@ class TestSimpleModelStorage(TestCase):
         assert self.stored == result.to_primitive()
 
     def test_match_on_non_existing(self):
-        self.assertRaises(self.TestModel.match, id='Bar')
-        self.assertRaises(self.TestModel.match, pk='Bar')
+        self.assertRaises(self.TestModel.match, id=321)
+        self.assertRaises(self.TestModel.match, pk='321')
         self.assertRaises(self.TestModel.match, good_number__gt=42)
         self.assertRaises(self.TestModel.match, good_number__lt=42)
 
     def test_match_for_pk(self):
-        result = self.TestModel.match_for_pk('Foo')
+        result = self.TestModel.match_for_pk('123')
         assert self.stored == result.to_primitive()
 
     def test_match_for_values(self):
@@ -117,7 +117,7 @@ class TestSimpleModelStorage(TestCase):
         assert self.raw_value is None
 
     def tearDown(self):
-        client.delete('TestSimpleModel:Foo')
+        client.delete('TestSimpleModel:123')
 
 
 class TestHashModelStorage(TestCase):
@@ -126,7 +126,7 @@ class TestHashModelStorage(TestCase):
         __redis_client__ = client
         __expire__ = 120
 
-        id = types.StringType(required=True)
+        id = types.IntType(required=True)
         name = types.StringType()
         created = types.DateTimeType()
         good_number = types.IntType()
@@ -134,7 +134,7 @@ class TestHashModelStorage(TestCase):
     def setUp(self):
         self.TestModel = self.TestHashModel
         self.schema = self.TestModel({
-            'id': 'Foo',
+            'id': 123,
             'name': 'Bar',
             'created': datetime.now(),
             'good_number': 42,
@@ -143,7 +143,7 @@ class TestHashModelStorage(TestCase):
 
     @property
     def raw_value(self):
-        return client.hget('TestHashModel', 'TestHashModel:Foo')
+        return client.hget('TestHashModel', 'TestHashModel:123')
 
     @property
     def stored(self):
@@ -153,10 +153,10 @@ class TestHashModelStorage(TestCase):
         assert self.stored == self.schema.to_primitive()
 
     def test_match(self):
-        result = self.TestModel.match(id='Foo')
+        result = self.TestModel.match(id=123)
         assert self.stored == result.to_primitive()
 
-        result = self.TestModel.match(pk='Foo')
+        result = self.TestModel.match(pk='123')
         assert self.stored == result.to_primitive()
 
         result = self.TestModel.match(good_number=42)
@@ -169,13 +169,13 @@ class TestHashModelStorage(TestCase):
         assert self.stored == result.to_primitive()
 
     def test_match_on_non_existing(self):
-        self.assertRaises(self.TestModel.match, id='Bar')
-        self.assertRaises(self.TestModel.match, pk='Bar')
+        self.assertRaises(self.TestModel.match, id=123)
+        self.assertRaises(self.TestModel.match, pk='123')
         self.assertRaises(self.TestModel.match, good_number__gt=42)
         self.assertRaises(self.TestModel.match, good_number__lt=42)
 
     def test_match_for_pk(self):
-        result = self.TestModel.match_for_pk('Foo')
+        result = self.TestModel.match_for_pk('123')
         assert self.stored == result.to_primitive()
 
     def test_match_for_values(self):
@@ -222,4 +222,4 @@ class TestHashModelStorage(TestCase):
         assert self.raw_value is None
 
     def tearDown(self):
-        client.delete('TestSimpleModel:Foo')
+        client.delete('TestHashModel')
