@@ -9,15 +9,15 @@ from unittest import TestCase
 from redis import StrictRedis
 from schematics import types
 
-from redis_schematics import SimpleRedisModel
+from redis_schematics import SimpleRedisModel, HashRedisModel
 
 
 client = StrictRedis(host='localhost', port=6379, db=4)
 
 
-class TestBasicModelStorage(TestCase):
+class TestSimpleModelStorage(TestCase):
 
-    class TestModel(SimpleRedisModel):
+    class TestSimpleModel(SimpleRedisModel):
         __redis_client__ = client
         __expire__ = 120
 
@@ -27,6 +27,7 @@ class TestBasicModelStorage(TestCase):
         good_number = types.IntType()
 
     def setUp(self):
+        self.TestModel = self.TestSimpleModel
         self.schema = self.TestModel({
             'id': 'Foo',
             'name': 'Bar',
@@ -34,7 +35,14 @@ class TestBasicModelStorage(TestCase):
             'good_number': 42,
         })
         self.schema.set()
-        self.stored = json.loads(client.get('TestModel:Foo'))
+
+    @property
+    def raw_value(self):
+        return client.get('TestSimpleModel:Foo')
+
+    @property
+    def stored(self):
+        return json.loads(self.raw_value)
 
     def test_set(self):
         assert self.stored == self.schema.to_primitive()
@@ -55,7 +63,7 @@ class TestBasicModelStorage(TestCase):
         result = self.TestModel.match(good_number__gt=41)
         assert self.stored == result.to_primitive()
 
-    def test_on_non_existing(self):
+    def test_match_on_non_existing(self):
         self.assertRaises(self.TestModel.match, id='Bar')
         self.assertRaises(self.TestModel.match, pk='Bar')
         self.assertRaises(self.TestModel.match, good_number__gt=42)
@@ -67,13 +75,16 @@ class TestBasicModelStorage(TestCase):
 
     def test_match_for_values(self):
         result = self.TestModel.match_for_values(name='Bar')
-        stored = client.get('TestModel:Foo')
-        assert json.loads(stored) == result.to_primitive()
+        assert self.stored == result.to_primitive()
 
     def test_all(self):
         result = self.TestModel.all()
-        stored = client.get('TestModel:Foo')
-        assert json.loads(stored) == result[0].to_primitive()
+        assert self.stored == result[0].to_primitive()
+
+    def test_all_on_non_existing(self):
+        self.schema.delete()
+        result = self.TestModel.all()
+        assert result == []
 
     def test_filter(self):
         result = self.TestModel.filter(good_number__lt=43)
@@ -81,5 +92,134 @@ class TestBasicModelStorage(TestCase):
         result = self.TestModel.filter(good_number__lt=42)
         assert result == []
 
+    def test_delete(self):
+        self.schema.delete()
+        assert self.raw_value is None
+
+    def test_delete_all(self):
+        assert self.TestModel.delete_all() == 1
+        assert self.raw_value is None
+
+    def test_delete_all_on_non_existing(self):
+        self.schema.delete()
+        assert self.TestModel.delete_all() == 0
+        assert self.raw_value is None
+
+    def test_delete_filter(self):
+        assert self.TestModel.delete_filter(name='Bla') == 0
+        assert self.raw_value
+        assert self.TestModel.delete_filter(name='Bar') == 1
+        assert self.raw_value is None
+
+    def test_delete_filter_on_non_existing(self):
+        self.schema.delete()
+        assert self.TestModel.delete_filter() == 0
+        assert self.raw_value is None
+
     def tearDown(self):
-        client.delete('TestModel:Foo')
+        client.delete('TestSimpleModel:Foo')
+
+
+class TestHashModelStorage(TestCase):
+
+    class TestHashModel(HashRedisModel):
+        __redis_client__ = client
+        __expire__ = 120
+
+        id = types.StringType(required=True)
+        name = types.StringType()
+        created = types.DateTimeType()
+        good_number = types.IntType()
+
+    def setUp(self):
+        self.TestModel = self.TestHashModel
+        self.schema = self.TestModel({
+            'id': 'Foo',
+            'name': 'Bar',
+            'created': datetime.now(),
+            'good_number': 42,
+        })
+        self.schema.set()
+
+    @property
+    def raw_value(self):
+        return client.hget('TestHashModel', 'TestHashModel:Foo')
+
+    @property
+    def stored(self):
+        return json.loads(self.raw_value)
+
+    def test_set(self):
+        assert self.stored == self.schema.to_primitive()
+
+    def test_match(self):
+        result = self.TestModel.match(id='Foo')
+        assert self.stored == result.to_primitive()
+
+        result = self.TestModel.match(pk='Foo')
+        assert self.stored == result.to_primitive()
+
+        result = self.TestModel.match(good_number=42)
+        assert self.stored == result.to_primitive()
+
+        result = self.TestModel.match(good_number__lt=43)
+        assert self.stored == result.to_primitive()
+
+        result = self.TestModel.match(good_number__gt=41)
+        assert self.stored == result.to_primitive()
+
+    def test_match_on_non_existing(self):
+        self.assertRaises(self.TestModel.match, id='Bar')
+        self.assertRaises(self.TestModel.match, pk='Bar')
+        self.assertRaises(self.TestModel.match, good_number__gt=42)
+        self.assertRaises(self.TestModel.match, good_number__lt=42)
+
+    def test_match_for_pk(self):
+        result = self.TestModel.match_for_pk('Foo')
+        assert self.stored == result.to_primitive()
+
+    def test_match_for_values(self):
+        result = self.TestModel.match_for_values(name='Bar')
+        assert self.stored == result.to_primitive()
+
+    def test_all(self):
+        result = self.TestModel.all()
+        assert self.stored == result[0].to_primitive()
+
+    def test_all_on_non_existing(self):
+        self.schema.delete()
+        result = self.TestModel.all()
+        assert result == []
+
+    def test_filter(self):
+        result = self.TestModel.filter(good_number__lt=43)
+        assert self.stored == result[0].to_primitive()
+        result = self.TestModel.filter(good_number__lt=42)
+        assert result == []
+
+    def test_delete(self):
+        self.schema.delete()
+        assert self.raw_value is None
+
+    def test_delete_all(self):
+        assert self.TestModel.delete_all() == 1
+        assert self.raw_value is None
+
+    def test_delete_all_on_non_existing(self):
+        self.schema.delete()
+        assert self.TestModel.delete_all() == 0
+        assert self.raw_value is None
+
+    def test_delete_filter(self):
+        assert self.TestModel.delete_filter(name='Bla') == 0
+        assert self.raw_value
+        assert self.TestModel.delete_filter(name='Bar') == 1
+        assert self.raw_value is None
+
+    def test_delete_filter_on_non_existing(self):
+        self.schema.delete()
+        assert self.TestModel.delete_filter() == 0
+        assert self.raw_value is None
+
+    def tearDown(self):
+        client.delete('TestSimpleModel:Foo')

@@ -12,11 +12,44 @@ Using pip::
     pip install redis_schamatics
 
 
+Understanding Persistence layers
+--------------------------------
+
+There are several ways to implement complex objects persitence on a key-value-set
+database such as redis. The best way to do it depends on your application constraints.
+We think that providing a good abstraction for your application is to allow you
+to choose which abstraction you want to use. Below you can find a comparison on different
+provided abstraction layers.
+
+*Currently we only support a SimpleRedisMixin and SimpleRedisModel, but you can
+use BaseRedisMixin to build your own persistance layers.*
+
+
+**SimpleRedisMixin**
+
+Add Redis persistance to an object using a single hash approach. Each type
+correnspond to a single key on redis containing a hash set with every instance
+as an entry on the set which contains a serialized object.
+
+You may use this Mixin when you have frequent match on primary key, set and
+all operations, hard memory contraints or wants a single key approach.
+You may not use this Mixin if you need performance on filter and get on
+non primary key operations.
+
+**HashRedisMixin**
+
+Add Redis persistance to an object using a single hash approach. Each type
+correnspond to a single key on redis containing a hash set with every instance
+as an entry on the set which contains a serialized object.
+
+You may use this Mixin when you have frequent match on primary key, set and
+all operations, hard memory contraints or wants a single key approach.
+You may not use this Mixin if you need performance on filter and get on
+non primary key operations.
+
+
 Quickstart
 ----------
-
-*Currently we only support a SimpleRedisMixin.*
-
 
 **Creating models with persistence**
 
@@ -99,6 +132,7 @@ this invlolves deserializing all stored objects.
 **Deleting and expiring**
 
 To remove objects, you can set ``__expire__`` or use the ``delete()`` method.
+Notice that expires work differently on single key and multiple keys approaches.
 
 .. code-block:: python
 
@@ -112,7 +146,8 @@ To remove objects, you can set ``__expire__`` or use the ``delete()`` method.
 Roadmap
 -------
 
-- [ ] Support a distributed Mixin with one key per field.
-- [ ] Consistent set of unit tests.
-- [ ] Support redis relationships between models.
-- [ ] Support transaction aware methods.
+- Support a distributed Mixin with one key per field.
+- Support a distributed Hash Mixin with one hash per field.
+- Consistent set of unit tests.
+- Support redis relationships between models.
+- Support transaction aware methods.
