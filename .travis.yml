@@ -1,0 +1,23 @@
+language: python
+python: 3.6
+services:
+    - redis-server
+before_install:
+    - python --version
+install:
+    - pip install tox
+script:
+    - tox -e $TOX_ENV
+after_success:
+    - pip install coveralls
+    - coveralls
+matrix:
+  include:
+    - python: 2.7
+      env: TOX_ENV=py27
+    - python: 3.5
+      env: TOX_ENV=py35
+    - python: 3.6
+      env: TOX_ENV=py36
+    - env:
+        - TOX_ENV=flake8
