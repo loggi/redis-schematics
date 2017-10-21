@@ -10,6 +10,7 @@ from redis import StrictRedis
 from schematics import types
 
 from redis_schematics import SimpleRedisModel, HashRedisModel
+from redis_schematics.exceptions import NotFound
 
 
 client = StrictRedis(host='localhost', port=6379, db=4)
@@ -42,7 +43,7 @@ class TestSimpleModelStorage(TestCase):
 
     @property
     def stored(self):
-        return json.loads(self.raw_value)
+        return json.loads(self.raw_value.decode('utf-8'))
 
     def test_set(self):
         assert self.stored == self.schema.to_primitive()
@@ -64,10 +65,10 @@ class TestSimpleModelStorage(TestCase):
         assert self.stored == result.to_primitive()
 
     def test_match_on_non_existing(self):
-        self.assertRaises(self.TestModel.match, id=321)
-        self.assertRaises(self.TestModel.match, pk='321')
-        self.assertRaises(self.TestModel.match, good_number__gt=42)
-        self.assertRaises(self.TestModel.match, good_number__lt=42)
+        self.assertRaises(NotFound, self.TestModel.match, id=321)
+        self.assertRaises(NotFound, self.TestModel.match, pk='321')
+        self.assertRaises(NotFound, self.TestModel.match, good_number__gt=42)
+        self.assertRaises(NotFound, self.TestModel.match, good_number__lt=42)
 
     def test_match_for_pk(self):
         result = self.TestModel.match_for_pk('123')
@@ -147,7 +148,7 @@ class TestHashModelStorage(TestCase):
 
     @property
     def stored(self):
-        return json.loads(self.raw_value)
+        return json.loads(self.raw_value.decode('utf-8'))
 
     def test_set(self):
         assert self.stored == self.schema.to_primitive()
@@ -169,10 +170,10 @@ class TestHashModelStorage(TestCase):
         assert self.stored == result.to_primitive()
 
     def test_match_on_non_existing(self):
-        self.assertRaises(self.TestModel.match, id=123)
-        self.assertRaises(self.TestModel.match, pk='123')
-        self.assertRaises(self.TestModel.match, good_number__gt=42)
-        self.assertRaises(self.TestModel.match, good_number__lt=42)
+        self.assertRaises(NotFound, self.TestModel.match, id=321)
+        self.assertRaises(NotFound, self.TestModel.match, pk='321')
+        self.assertRaises(NotFound, self.TestModel.match, good_number__gt=42)
+        self.assertRaises(NotFound, self.TestModel.match, good_number__lt=42)
 
     def test_match_for_pk(self):
         result = self.TestModel.match_for_pk('123')

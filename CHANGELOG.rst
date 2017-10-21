@@ -2,7 +2,9 @@
 0.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+**Bug Fixes**
+
+- Broken tests with py3.
 
 
 0.2.1 (2017-09-14)
