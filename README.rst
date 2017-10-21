@@ -3,6 +3,11 @@ Redis Schematics
 
 *Provides Redis persistence to Schematics models with cutomizable abstraction levels.*
 
+|travis|
+
+.. |travis| image:: https://travis-ci.org/loggi/redis-schematics.svg?branch=master
+    :target: https://travis-ci.org/loggi/redis-schematics
+
 
 Installing
 ----------
