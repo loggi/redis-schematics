@@ -14,7 +14,7 @@ Installing
 
 Using pip::
 
-    pip install redis_schamatics
+    pip install redis_schematics
 
 
 Understanding Persistence layers
