@@ -35,12 +35,12 @@ use BaseRedisMixin to build your own persistance layers.*
 Add Redis persistance to an object using a simple approach. Each object
 correnspond to a single key on redis prefixed with the object namespace,
 which correnponds to a serialized object. To use this mixin you just need
-to declare a primary key such as:
+to declare a primary key as on the example below.
 
-You may use this Mixin when you have frequent match on primary key and set
+You may use this Mixin when you have frequent matches on primary key and set
 operations, unique expires, hard memory contraints or just wants a 1-1 object-key
-approach. You may not use this Mixin if you need performance on filter, all
-and get on non primary key operations.
+approach. You may not use this Mixin if you need performance on ``filter``, ``all``
+and ``get`` on non primary key operations.
 
 **HashRedisMixin**
 
@@ -48,9 +48,9 @@ Add Redis persistance to an object using a single hash approach. Each type
 correnspond to a single key on redis containing a hash set with every instance
 as an entry on the set which contains a serialized object.
 
-You may use this Mixin when you have frequent match on primary key, set and
+You may use this Mixin when you have frequent matches on primary key, set and
 all operations, hard memory contraints or wants a single key approach.
-You may not use this Mixin if you need performance on filter and get on
+You may not use this Mixin if you need performance on ``filter`` and ``get`` on
 non primary key operations.
 
 
