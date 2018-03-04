@@ -1,6 +1,6 @@
 flake8==3.5.0
 mock==2.0.0
-pytest
+pytest==3.4.1
 pytest-cache
 pytest-cover
 pytest-sugar
