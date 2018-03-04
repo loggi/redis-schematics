@@ -1,4 +1,4 @@
-## Tipo
+## Type
 
 - Bug fix (issue #)
 - Feature (issue #)
@@ -10,23 +10,24 @@
 - WIP
 - Done
 
-## Tarefas
+## Tasks
 
-- [ ] Testes de unidade
-- [ ] Testes de integração
-- [ ] Documentação da API
-- [ ] Atualizar o CHANGELOG
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Documentation
+- [ ] Changelog
 
-## Descrição
+## Description
 
-*Escreva uma breve descrição aqui.*
+*Insert short description*
 
-## PRs Relacionados
+## Related to
 
-- Name (pr #)
+- Any project/issue
 
 ## Needs Release
 
 - Major
 - Minor
+- Bugfix
 - No
