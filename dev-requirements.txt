@@ -1,7 +1,7 @@
 flake8==3.5.0
 mock==2.0.0
 pytest==3.4.1
-pytest-cache
+pytest-cache==1.0
 pytest-cover
 pytest-sugar
 pytest-xdist
