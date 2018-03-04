@@ -22,7 +22,7 @@ Understanding Persistence layers
 
 There are several ways to implement complex objects persitence on a key-value-set
 database such as redis. The best way to do it depends on your application constraints.
-We think that providing a good abstraction for your application is to allow you
+We think that providing a good storage model for your application is to allow you
 to choose which abstraction you want to use. Below you can find a comparison on different
 provided abstraction layers.
 
