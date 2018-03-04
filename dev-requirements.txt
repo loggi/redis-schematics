@@ -7,4 +7,4 @@ pytest-sugar==0.9.1
 pytest-xdist==1.22.2
 zest.releaser==6.13.5
 tox==2.9.1
-grpcio_tools
+grpcio_tools==1.10.0
