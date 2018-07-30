@@ -152,8 +152,4 @@ Notice that expires work differently on single key and multiple keys approaches.
 Roadmap
 -------
 
-- Support a distributed Mixin with one key per field.
-- Support a distributed Hash Mixin with one hash per field.
-- Consistent set of unit tests.
-- Support redis relationships between models.
-- Support transaction aware methods.
+We are still ``0.x``, but we are very close to a stable API. Check `our roadmap <https://github.com/loggi/redis-schematics/issues/40>` for a glance of what's missing.
