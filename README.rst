@@ -152,4 +152,4 @@ Notice that expires work differently on single key and multiple keys approaches.
 Roadmap
 -------
 
-We are still ``0.x``, but we are very close to a stable API. Check `our roadmap <https://github.com/loggi/redis-schematics/issues/40>` for a glance of what's missing.
+We are still ``0.x``, but we are very close to a stable API. Check `our roadmap <https://github.com/loggi/redis-schematics/issues/40>`_ for a glance of what's missing.
