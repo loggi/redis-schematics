@@ -6,4 +6,4 @@ pytest-cover==3.0.0
 pytest-sugar==0.9.1
 pytest-xdist==1.22.5
 zest.releaser==6.15.1
-tox==3.2.0
+tox==3.2.1
