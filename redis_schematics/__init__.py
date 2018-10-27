@@ -16,12 +16,9 @@ from schematics import models, types
 from redis_schematics.exceptions import (
     NotFound,
     MultipleFound,
-    StrictPerformanceException
+    StrictPerformanceException,
 )
-from redis_schematics.utils import (
-    group_filters_by_suffix,
-    match_filters
-)
+from redis_schematics.utils import group_filters_by_suffix, match_filters
 
 
 class BaseRedisMixin(object):
@@ -62,14 +59,14 @@ class BaseRedisMixin(object):
     def __primary_key__(self):
         """Callable that returns an unique identifier for an object on a
         given namespace. By default it uses pk, id and __unique_args__."""
-        if getattr(self, 'pk', None):
+        if getattr(self, "pk", None):
             return str(self.pk)
 
-        if getattr(self, 'id', None):
+        if getattr(self, "id", None):
             return str(self.id)
 
         if self.__unique_args__:
-            return '.'.join([getattr(self, const) for const in self.__unique_args__])
+            return ".".join([getattr(self, const) for const in self.__unique_args__])
 
     def __key_pattern__(self, *args):
         """Pattern used to build a key or a query for a given object."""
@@ -148,7 +145,7 @@ class SimpleRedisMixin(BaseRedisMixin):
 
         Perfomance: O(1)
         """
-        schema = cls({'pk': pk})
+        schema = cls({"pk": pk})
         result = cls.__redis_client__.get(schema.key)
 
         if result is None:
@@ -298,9 +295,7 @@ class SimpleRedisMixin(BaseRedisMixin):
         self.pk = self.__primary_key__ or str(uuid.uuid4)
 
         self.__redis_client__.set(
-            self.key,
-            self.__serializer__(self.to_primitive()),
-            self.__expire__
+            self.key, self.__serializer__(self.to_primitive()), self.__expire__
         )
 
     def refresh(self):
@@ -396,7 +391,7 @@ class HashRedisMixin(BaseRedisMixin):
 
         Perfomance: O(1)
         """
-        schema = cls({'pk': pk})
+        schema = cls({"pk": pk})
         result = cls.__redis_client__.hget(schema.__set_key__, schema.key)
 
         if result is None:
@@ -532,9 +527,7 @@ class HashRedisMixin(BaseRedisMixin):
         self.pk = self.__primary_key__ or str(uuid.uuid4)
 
         self.__redis_client__.hset(
-            self.__set_key__,
-            self.key,
-            self.__serializer__(self.to_primitive()),
+            self.__set_key__, self.key, self.__serializer__(self.to_primitive())
         )
         self.__redis_client__.expire(self.__set_key__, self.__expire__)
 
@@ -547,8 +540,7 @@ class HashRedisMixin(BaseRedisMixin):
 
         Perfomance: O(1)
         """
-        result = self.__redis_client__.hget(self.__set_key__,
-                                            self.key)
+        result = self.__redis_client__.hget(self.__set_key__, self.key)
 
         if result is None:
             raise NotFound()
