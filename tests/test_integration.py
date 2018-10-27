@@ -34,11 +34,11 @@ class BaseModelStorageTest(object):
 
     @property
     def raw_value(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def stored(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def test_set(self):
         assert self.stored == self.schema.to_primitive()
