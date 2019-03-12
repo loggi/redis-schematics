@@ -108,6 +108,14 @@ class BaseModelStorageTest(object):
         assert self.TestModel.delete_filter() == 0
         assert self.raw_value is None
 
+    def test_json_serialization(self):
+        from redis_schematics.patches import patch_json
+        patch_json()
+        data = self.TestModel.all()
+        data_json = json.dumps(data)
+        expected = json.dumps([x.to_primitive() for x in data])
+        assert data_json == expected
+
     def tearDown(self):
         client.delete("TestSimpleModel:123")
 
