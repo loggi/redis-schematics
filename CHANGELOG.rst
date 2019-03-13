@@ -2,6 +2,10 @@
 0.2.2 (unreleased)
 ------------------
 
+**Features**
+
+- Optional JSON serialization.
+
 **Bug Fixes**
 
 - Broken tests with py3.

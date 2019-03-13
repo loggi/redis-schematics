@@ -80,6 +80,21 @@ class BaseRedisMixin(object):
 
         return ":".join(namespace)
 
+    def __json__(self):
+        """
+        If you want json serialization, you have at least two options:
+            1. Patch the default serializer.
+            2. Write a custom JSONEncoder.
+        redis-schematics comes with a handy patch funtion, you need to add this
+        code, to somewhere at the top of everything to automagically add
+        json serialization capabilities:
+             from redis_schematics.patches import patch_json
+            patch_json()
+         Note: Eventually `__json__` will be added to the stdlib, see
+            https://bugs.python.org/issue27362
+        """
+        return self.to_primitive()
+
 
 class SimpleRedisMixin(BaseRedisMixin):
     """

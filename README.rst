@@ -149,6 +149,28 @@ Notice that expires work differently on single key and multiple keys approaches.
     vanilla.delete()
 
 
+JSON
+----
+
+If you want json serialization, you have at least two options:
+
+1. Patch the default serializer.
+2. Write a custom JSONEncoder.
+
+We've implemented a handy patch funtion, you need to add this
+code to somewhere at the top of everything to automagically add
+json serialization capabilities:
+
+.. code:: python
+
+    from redis_schematics.patches import patch_json
+    patch_json()
+
+.. note::
+
+    Eventually ``__json__`` will be added to the stdlib, see
+    https://bugs.python.org/issue27362
+
 Roadmap
 -------
 
