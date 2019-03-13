@@ -110,6 +110,7 @@ class BaseModelStorageTest(object):
 
     def test_json_serialization(self):
         from redis_schematics.patches import patch_json
+
         patch_json()
         data = self.TestModel.all()
         data_json = json.dumps(data)

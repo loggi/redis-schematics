@@ -1,5 +1,3 @@
-
-
 def patch_json():
     """
     Patch json default encoder to globally try to find and call a ``__json__``
