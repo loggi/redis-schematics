@@ -1,2 +1,2 @@
 schematics==2.1.0
-redis==3.3.8
+redis==3.3.11
