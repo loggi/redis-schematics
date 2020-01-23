@@ -43,7 +43,7 @@ class BaseRedisMixin(object):
     @staticmethod
     def __deserializer__(dump):
         """Method used to deserialize to string prior to loading complex objects."""
-        return json.loads(dump.decode("utf-8"))
+        return json.loads(dump)
 
     @property
     def key(self):
