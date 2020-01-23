@@ -13,12 +13,12 @@ after_success:
     - coveralls
 matrix:
   include:
-    - python: 3.5
-      env: TOX_ENV=py35
     - python: 3.6
       env: TOX_ENV=py36
     - env:
-        - TOX_ENV=flake8
+        -   TOX_ENV=flake8
     - python: 3.6
       env:
         - TOX_ENV=black
+    - python: 3.7
+      env: TOX_ENV=py37
