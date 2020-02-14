@@ -1,8 +1,8 @@
 
-0.2.3 (unreleased)
+0.3.0 (2020-02-14)
 ------------------
 
-- Nothing changed yet.
+- Deprecate Python 2 and migrate to Python 3.
 
 
 0.2.2 (2019-03-13)
